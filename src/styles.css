@@ -118,6 +118,9 @@
   --scrollbar-track: transparent;
 
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-soft));
+  --gradient-card-gold: linear-gradient(135deg, oklch(0.82 0.15 88), oklch(0.55 0.11 70) 55%, oklch(0.34 0.06 62));
+  --gradient-card-ocean: linear-gradient(135deg, oklch(0.72 0.1 210), oklch(0.45 0.09 235) 55%, oklch(0.27 0.05 250));
+  --gradient-card-violet: linear-gradient(135deg, oklch(0.62 0.18 300), oklch(0.42 0.16 290) 55%, oklch(0.26 0.08 285));
   --gradient-glow: radial-gradient(
     120% 120% at 50% 0%,
     color-mix(in oklab, var(--primary) 30%, transparent),

@@ -1,11 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { CreditCard, Plus, Snowflake } from "lucide-react";
+import { Plus } from "lucide-react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { CardTile, type CardData } from "@/components/cards/CardTile";
+import { CashflowChart } from "@/components/cards/CashflowChart";
+import { RecentActivity } from "@/components/cards/RecentActivity";
+import { AllTransactions } from "@/components/cards/AllTransactions";
 
-const cards = [
-  { name: "Vorix Black", number: "•••• •••• •••• 4425", holder: "Amin S.", exp: "09/29" },
-  { name: "Vorix Business", number: "•••• •••• •••• 1180", holder: "Vorix LLC", exp: "04/28" },
-  { name: "Vorix Travel", number: "•••• •••• •••• 7732", holder: "Amin S.", exp: "12/27" },
+const cards: CardData[] = [
+  { id: "gold", last4: "5421", exp: "07/28", gradient: "var(--gradient-card-gold)" },
+  { id: "ocean", last4: "8547", exp: "07/28", gradient: "var(--gradient-card-ocean)" },
+  { id: "violet", last4: "8757", exp: "01/31", gradient: "var(--gradient-card-violet)" },
 ];
 
 export const Route = createFileRoute("/cards")({
@@ -14,13 +18,17 @@ export const Route = createFileRoute("/cards")({
       { title: "Cards — Vorix Finance Dashboard" },
       {
         name: "description",
-        content: "Manage physical and virtual Vorix cards, freeze them and track spending limits.",
+        content:
+          "Manage multiple cards, track transactions, monitor spending patterns and view real-time account activity.",
       },
       { property: "og:title", content: "Cards — Vorix Finance Dashboard" },
       {
         property: "og:description",
-        content: "Manage physical and virtual Vorix cards, freeze them and track spending limits.",
+        content:
+          "Manage multiple cards, track transactions, monitor spending patterns and view real-time account activity.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: CardsPage,
@@ -29,38 +37,29 @@ export const Route = createFileRoute("/cards")({
 function CardsPage() {
   return (
     <DashboardLayout title="Cards">
-      <div className="mt-5 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+      <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+        Manage multiple cards effortlessly, track transactions, monitor spending patterns, and view
+        real-time activity — all designed to simplify your financial control and transparency.
+      </p>
+
+      <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {cards.map((c) => (
-          <section key={c.name} className="panel overflow-hidden p-5">
-            <div
-              className="rounded-2xl p-4 text-primary-foreground"
-              style={{ backgroundImage: "var(--gradient-primary)" }}
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold">{c.name}</span>
-                <CreditCard className="h-4 w-4" />
-              </div>
-              <p className="mt-8 font-display text-lg tracking-widest">{c.number}</p>
-              <div className="mt-4 flex items-center justify-between text-xs opacity-85">
-                <span>{c.holder}</span>
-                <span>{c.exp}</span>
-              </div>
-            </div>
-            <div className="mt-4 flex gap-2">
-              <button className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-surface-2 px-3 py-2 text-xs font-medium transition-colors hover:bg-muted">
-                <Snowflake className="h-3.5 w-3.5" /> Freeze
-              </button>
-              <button className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-surface-2 px-3 py-2 text-xs font-medium transition-colors hover:bg-muted">
-                Details
-              </button>
-            </div>
-          </section>
+          <CardTile key={c.id} card={c} />
         ))}
 
-        <button className="panel flex min-h-[220px] flex-col items-center justify-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground">
+        <button className="panel flex h-[168px] flex-col items-center justify-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground">
           <Plus className="h-5 w-5" />
-          Add new card
+          Add Card
         </button>
+      </div>
+
+      <div className="mt-5 grid gap-5 xl:grid-cols-[1.9fr_1fr]">
+        <CashflowChart />
+        <RecentActivity />
+      </div>
+
+      <div className="mt-5">
+        <AllTransactions />
       </div>
     </DashboardLayout>
   );
