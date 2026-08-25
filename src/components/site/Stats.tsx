@@ -1,4 +1,6 @@
 import { Reveal } from "./Reveal";
+import { Figure } from "./Figure";
+import { useSpotlight } from "@/hooks/use-spotlight";
 
 const stats = [
   {
@@ -45,10 +47,15 @@ const marquee = [
 ];
 
 export function Stats() {
+  const spotlight = useSpotlight<HTMLDivElement>();
+
   return (
     <section aria-label="Impact in numbers" className="relative px-4 pt-10 pb-4 sm:pt-14">
       <div className="mx-auto max-w-6xl">
-        <Reveal className="grid overflow-hidden rounded-4xl bg-card edge-card sm:grid-cols-2 lg:grid-cols-4">
+        <Reveal
+          className="spotlight grid overflow-hidden rounded-4xl bg-card edge-card sm:grid-cols-2 lg:grid-cols-4"
+          stagger={90}
+        >
           {stats.map((s, i) => (
             <div
               key={s.label}
@@ -65,7 +72,7 @@ export function Stats() {
                 className="pointer-events-none absolute inset-y-6 left-0 hidden w-px bg-[var(--edge-seam)] lg:block"
               />
               <p className="flex items-baseline gap-1">
-                <span className="figure text-5xl text-primary">{s.value}</span>
+                <Figure value={s.value} className="text-5xl text-primary" />
                 <span className="figure text-xl text-accent">{s.unit}</span>
               </p>
               <p className="mt-4 text-sm leading-snug">{s.label}</p>

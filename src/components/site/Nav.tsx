@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { scheduleFrame } from "@/lib/motion";
 import { ThemeToggle } from "./ThemeToggle";
 
 const links = [
@@ -12,10 +13,19 @@ const links = [
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
+    let last = window.scrollY;
+    const read = () => {
+      const y = window.scrollY;
+      setScrolled(y > 24);
+      // Hide on downward scroll past the hero, reveal instantly on scroll up.
+      setHidden(y > 240 && y > last + 4);
+      last = y;
+    };
+    read();
+    const onScroll = () => scheduleFrame(read);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -31,8 +41,9 @@ export function Nav() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 px-3 transition-all duration-500 sm:px-5",
+        "fixed inset-x-0 top-0 z-50 px-3 transition-[transform,padding] duration-500 [transition-timing-function:cubic-bezier(0.16,1,0.3,1)] will-change-transform sm:px-5",
         scrolled ? "py-2 sm:py-3" : "py-4 sm:py-6",
+        hidden && !open ? "-translate-y-[130%]" : "translate-y-0",
       )}
     >
       <nav

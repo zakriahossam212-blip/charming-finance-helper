@@ -27,7 +27,9 @@ export function Hero() {
           alt="Modern luxury villa at golden hour with reflecting pool"
           width={1536}
           height={1024}
-          className="hero-media absolute inset-0 size-full object-cover"
+          className="hero-media parallax-media absolute inset-0 size-full object-cover"
+          decoding="async"
+          fetchPriority="high"
         />
 
         {/* Contrast scrim: fixed dark tone so text stays legible in both themes */}
