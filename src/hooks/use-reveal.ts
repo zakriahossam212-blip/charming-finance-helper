@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { observeOnce, prefersReducedMotion } from "@/lib/motion";
 
+/**
+ * Enter-on-scroll state driven by a single shared IntersectionObserver.
+ * Elements already in view on mount skip the observer entirely, and
+ * reduced-motion users are marked visible immediately.
+ */
 export function useReveal<T extends HTMLElement = HTMLDivElement>() {
   const ref = useRef<T | null>(null);
   const [visible, setVisible] = useState(false);
@@ -8,26 +14,18 @@ export function useReveal<T extends HTMLElement = HTMLDivElement>() {
     const el = ref.current;
     if (!el) return;
 
-    // Already in (or above) the viewport on mount.
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight * 0.92) {
+    if (prefersReducedMotion()) {
       setVisible(true);
       return;
     }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            observer.disconnect();
-          }
-        });
-      },
-      { threshold: 0, rootMargin: "0px 0px -8% 0px" },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    // Above / inside the fold on mount: reveal without observer churn.
+    if (el.getBoundingClientRect().top < window.innerHeight * 0.92) {
+      setVisible(true);
+      return;
+    }
+
+    return observeOnce(el, () => setVisible(true));
   }, []);
 
   return { ref, visible };
